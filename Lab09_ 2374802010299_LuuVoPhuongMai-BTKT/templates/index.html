@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>CNN Flask Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            text-align: center;
+            margin: 0;
+            padding: 40px;
+        }
+        .container {
+            width: 580px;
+            margin: auto;
+            background: white;
+            padding: 28px;
+            border-radius: 14px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        }
+        select, input, button {
+            margin-top: 12px;
+            padding: 10px;
+            width: 90%;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        img {
+            margin-top: 20px;
+            max-width: 260px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            color: green;
+        }
+        .confidence {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #333;
+        }
+        .error {
+            margin-top: 16px;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Website phân loại ảnh bằng CNN</h1>
+        <p>Chọn mô hình, tải ảnh lên và xem kết quả dự đoán</p>
+
+        <form method="POST" enctype="multipart/form-data">
+            <select name="model_type">
+                <option value="catdog" {% if selected_model == 'catdog' %}selected{% endif %}>Cat vs Dog</option>
+                <option value="cifar10" {% if selected_model == 'cifar10' %}selected{% endif %}>CIFAR-10</option>
+                <option value="plantvillage" {% if selected_model == 'plantvillage' %}selected{% endif %}>PlantVillage</option>
+            </select>
+
+            <input type="file" name="image" accept="image/*" required>
+            <button type="submit">Dự đoán</button>
+        </form>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if image_path %}
+            <h3>Ảnh đã tải lên:</h3>
+            <img src="{{ image_path }}" alt="Uploaded image">
+        {% endif %}
+
+        {% if prediction %}
+            <div class="result">
+                Kết quả dự đoán: {{ prediction }}
+            </div>
+            <div class="confidence">
+                Độ tin cậy: {{ "%.2f"|format(confidence) }}%
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
